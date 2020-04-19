@@ -6,12 +6,12 @@ import Button from "presentationals/atoms/Button";
 import Title from "presentationals/atoms/Title";
 import ProblemContainer from 'containers/ProblemContainer';
 import SimilarContainer from 'containers/SimilarContainer';
-import { setSimilars } from 'redux/reducers/problemSimilar';
+import { setSimilars, getSimilarsLoading, getSimilarsError } from 'redux/reducers/problemSimilar';
 import { useDataFetch } from 'hooks/useDataFetch';
 
 const WorkBookPage: React.FC = () => {
-  const dispatch = useDispatch();
-  useDataFetch(`http://localhost:3000/data/similars.json`, setSimilars)
+  
+  useDataFetch(`http://localhost:3000/data/similars.json`, setSimilars, getSimilarsLoading, getSimilarsError)
   const { similarModal } = useSelector((reducers: RootState) => ({
     similarModal: reducers.problemSimilar.similarModal,
   }));
@@ -32,7 +32,7 @@ const WorkBookPage: React.FC = () => {
             <Wrapper color="#FFFFFF" center={!similarModal}>
               {similarModal ? <SimilarContainer />
                             : <p>
-                                <Button name="유사문항"/>버튼을 누르면<br></br> 
+                                <Button onClickHandler={()=>{window.alert("왼쪽 유의문항 버튼을 누르세요")}} name="유의문항"/>버튼을 누르면<br></br> 
                                 해당 문제의 유사 문항을 볼 수 있습니다.
                               </p>
               }
@@ -46,7 +46,7 @@ const WorkBookPage: React.FC = () => {
 }
 export default WorkBookPage;
 
-const Background = styled.article`
+const Background = styled.main`
   position: fixed;
   width: 100%;
   height: 100%;

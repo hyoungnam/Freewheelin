@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setProblems, setSimilars } from 'redux/reducers/problemSimilar';
 import fetcher from 'api/fetcher';
 
-export const useDataFetch = (url: string, actionFunc) => {
+export const useDataFetch = (url: string, actionFunc: Function, getLoading: Function, getError: Function) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    fetcher(`${url}`)
-      .then((resolved)=>{
+    async function getData() {
+      dispatch(getLoading());
+      try {
+        const resolved = await fetcher(`${url}`);
         const processedData = resolved.data.map(obj => {
           return  {
             id: obj["id"],
@@ -18,6 +19,11 @@ export const useDataFetch = (url: string, actionFunc) => {
           }
         });
         dispatch(actionFunc(processedData));
-      })
-  }, [dispatch, url])
+      } catch (err) {
+        dispatch(getError(err));
+      } 
+    }
+    getData();
+
+  }, [dispatch, url, actionFunc, getLoading, getError])
 }

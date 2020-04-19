@@ -2,17 +2,17 @@ import React from 'react'
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'redux/reducers';
-import { clickAddSimilarBtn, clickSwitchSimilarBtn } from 'redux/reducers/problemSimilar';
+import { clickAddSimilarBtn, clickSwitchSimilarBtn} from 'redux/reducers/problemSimilar';
 import Problem from 'presentationals/components/Problem';
 
 const SimilarContainer: React.FC = () => {
 
   const dispatch = useDispatch();
-  const { similars } = useSelector((reducers: RootState) => ({
-    similars: reducers.problemSimilar.similarsState
-  }));
-  const { problems } = useSelector((reducers: RootState) => ({
-    problems: reducers.problemSimilar.problemsState
+  const { similars, problems, similarsLoading, similarsError } = useSelector((reducers: RootState) => ({
+    similars: reducers.problemSimilar.similarsState,
+    problems: reducers.problemSimilar.problemsState,
+    similarsLoading: reducers.problemSimilar.similarsLoading,
+    similarsError: reducers.problemSimilar.similarsError,
   }));
   const clickAddSimilarBtnHandler = (id: number) => {
     dispatch(clickAddSimilarBtn(id));
@@ -26,7 +26,8 @@ const SimilarContainer: React.FC = () => {
     })
     return problem.unitName
   } 
-
+  if(similarsLoading && !similars) return <div>로딩중...</div>
+  if(similarsError) return <div>에러 발생...</div>
   return (
     <>
       <H4>{findCurrentPickProblem()}</H4>
