@@ -20,17 +20,14 @@ const SimilarContainer: React.FC = () => {
   const clickSwitchSimilarBtnHandler = (id: number) => {
     dispatch(clickSwitchSimilarBtn(id));
   }
-  const findCurrentPickProblem = () => {
-    const problem = problems.find(item=>{
-      return item.isClicked === true
-    })
-    return problem.unitName
-  } 
+  const findCurrentPickProblem = problems.find(item=>{
+    return item.isClicked === true
+  })
   if(similarsLoading && !similars) return <div>로딩중...</div>
   if(similarsError) return <div>에러 발생...</div>
   return (
     <>
-      <H4>{findCurrentPickProblem()}</H4>
+      <H4>{findCurrentPickProblem}</H4>
       {similars.map((item, index)=>
         {return <Problem key={item.id}
                          id={item.id}
